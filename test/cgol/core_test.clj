@@ -14,7 +14,7 @@
   (testing "printing the world"
     (testing "Test Print a World that has only 1 dimension"
       (let [res (print-world [{:x 1 :y 1} {:x 3 :y 1}])]
-        (is (= res ["x x "]))))
+        (is (= res ["x x"]))))
     (testing "Test Print a World that has 3 points"
       (let [res (print-world [{:x 1 :y 1} {:x 3 :y 1} {:x 1 :y 3}])]
         (is (= res ["x x" "   " "x  "])))))

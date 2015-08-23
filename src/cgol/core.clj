@@ -39,9 +39,8 @@
   (let [wmin (world-min world)
         wmax (world-max world)]
     (reduce (fn [result rindex]
-              (clojure.core/println (str "Result: " result " index " rindex))
               (conj result (print-row wmin wmax 
-                              (filter #(= rindex (map :y %)) world))))
+                              (filter #(= rindex (:y %)) world))))
             []
             (range (:y wmin) (+ (:y wmax) 1)))))
 
