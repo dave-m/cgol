@@ -20,3 +20,18 @@
         (is (= res ["x x" "   " "x  "])))))
   )
  
+(deftest test-neighbours
+  (testing "Test getting all of the neighbours for a cell with"
+    (testing "no world"
+      (let [expected nil]
+        (is (= expected (neighbours {:x 1 :y 1} [])))))
+    (testing "no neighbours"
+      (let [expected nil]
+        (is (= expected (neighbours 
+                          {:x 1 :y 1} 
+                          [{:x 3 :y 3} {:x 4 :y 4} {:x 4 :y 3}])))))
+    (testing "Test world with neighbours"
+      (let [expected [{:x 1 :y 2}]]
+        (is (= expected (neighbours 
+                          {:x 1 :y 1} 
+                          [{:x 1 :y 2} {:x 4 :y 4} {:x 4 :y 3}])))))))

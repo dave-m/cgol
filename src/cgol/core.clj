@@ -2,12 +2,19 @@
   (:require clojure.pprint)
   (:gen-class))
 
-;; A Singe Cell, consists of (x, y))
-(defrecord Cell [x y])
-;; The world, a sequence of **live** cells)
-(defrecord World [world])
+(defn in? 
+  "true if seq contains elm"
+  [seq elm]
+  (some #(= elm %) seq))
 
-(defn neighbours [cell world])
+(defn neighbours [cell world]
+  (let [cellx (:x cell)
+        celly (:y cell)
+        px [(- cellx 1) cellx (+ cellx 1)]
+        py [(- celly 1) celly (+ celly 1)]
+        res (filter #(and (in? px (:x %))
+                          (in? py (:y %))) world)]
+    (if (empty? res) nil res)))
 
 (defn world-min [world]
   {:x (apply min (map :x world))
@@ -22,11 +29,6 @@
    (world-max world)])
 (defn dies? [cell world])
 (defn spawns? [cell world])
-
-(defn in? 
-  "true if seq contains elm"
-  [seq elm]
-  (some #(= elm %) seq))
 
 (defn print-row [wmin wmax row]
   (let [xvals (map :x row)]
@@ -43,7 +45,6 @@
                               (filter #(= rindex (:y %)) world))))
             []
             (range (:y wmin) (+ (:y wmax) 1)))))
-
 
 (defn -main
   "Run Conways Game of Life"
