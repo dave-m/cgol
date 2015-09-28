@@ -35,3 +35,26 @@
         (is (= expected (neighbours 
                           {:x 1 :y 1} 
                           [{:x 1 :y 2} {:x 4 :y 4} {:x 4 :y 3}])))))))
+
+(deftest test-dies?
+  (testing "Test determining if the current cell should die"
+    (testing "with no neighbours"
+      (is (= true (dies? {:x 1 :y 2} []))))
+    (testing "with one neighbours"
+      (is (= true (dies? {:x 1 :y 2} [{:x 2 :y 2}]))))
+    (testing "with three neighbours"
+      (is (= false (dies? {:x 1 :y 2} 
+                          [{:x 2 :y 2} {:x 1 :y 1} {:x 0 :y 2}]))))
+    (testing "with more than three neighbours"
+      (is (= true (dies? {:x 1 :y 2} 
+                          [{:x 2 :y 2} {:x 1 :y 1} {:x 0 :y 2} {:x 1 :y 3}]))))))
+
+(deftest test-spawns?
+  (testing "Test determining if the current cell should spawn?"
+    (testing "with no neighbours"
+      (is (= true (spawns? {:x 1 :y 2} []))))
+    (testing "with one neighbours"
+      (is (= true (spawns? {:x 1 :y 2} [{:x 2 :y 2}]))))
+    (testing "with three neighbours"
+      (is (= false (spawns? {:x 1 :y 2} 
+                          [{:x 2 :y 2} {:x 1 :y 1} {:x 0 :y 2}]))))))

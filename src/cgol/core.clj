@@ -7,7 +7,7 @@
   [seq elm]
   (some #(= elm %) seq))
 
-(defn neighbours [cell world]
+(defn neighbours "Neighbours of the cell" [cell world]
   (let [cellx (:x cell)
         celly (:y cell)
         px [(- cellx 1) cellx (+ cellx 1)]
@@ -27,8 +27,17 @@
 (defn world-boundaries [world]
   [(world-min world)
    (world-max world)])
-(defn dies? [cell world])
-(defn spawns? [cell world])
+
+(defn dies? "Any cell with < 3 neighbours dies" [cell world]
+  (case (count (neighbours cell world)) 
+    2 false
+    3 false
+    true))
+
+(defn spawns? "Any cell with 3 neighbours becomes live" [cell world]
+  (if (not= (count (neighbours cell world)) 3)
+    true
+    false))
 
 (defn print-row [wmin wmax row]
   (let [xvals (map :x row)]
@@ -46,8 +55,21 @@
             []
             (range (:y wmin) (+ (:y wmax) 1)))))
 
+(defn step "An iteration of the game world" [world]
+  (let [wmin (world-min world)
+        wmax (world-max world)]
+    (for [x (range (:x wmin) (+ (:x wmax) 1))
+          y (range (:y wmin) (+ (:y wmax) 1))]
+      (cond
+        (spawns? {:x x :y y} world) {:x x :y y}
+        (dies? {:x x :y y} world) nil
+        (in? {:x x :y y} world) {:x x :y y}
+        ))))
+
 (defn -main
   "Run Conways Game of Life"
   [& args]
   (let [world [{:x 1 :y 1} {:x 2 :y 1} {:x 3 :y 23} {:x -2 :y 4}]]
-    (dorun (map println (print-world world)) )))
+    (loop [world (step world)]
+      (dorun (map println (print-world world)))
+      (recur world))))
