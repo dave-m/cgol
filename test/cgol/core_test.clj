@@ -17,7 +17,8 @@
         (is (= res ["x x"]))))
     (testing "Test Print a World that has 3 points"
       (let [res (print-world [{:x 1 :y 1} {:x 3 :y 1} {:x 1 :y 3}])]
-        (is (= res ["x x" "   " "x  "])))))
+        (is (= res ["x x" "   " "x  "]))))
+    )
   )
  
 (deftest test-neighbours
@@ -58,3 +59,25 @@
     (testing "with three neighbours"
       (is (= false (spawns? {:x 1 :y 2} 
                           [{:x 2 :y 2} {:x 1 :y 1} {:x 0 :y 2}]))))))
+
+(deftest test-step
+  (testing "Test an iteration of the world"
+    (testing "with no change"
+      (every? true? (map = (zipmap
+              [{:x 0 :y 0}
+               {:x 1 :y 0}
+               {:x 0 :y 1}
+               {:x 1 :y 1}]
+              (step [{:x 0 :y 0}
+                    {:x 1 :y 0}
+                    {:x 0 :y 1}
+                    {:x 1 :y 1}]))
+             )))
+    (testing "with a new spawn (blinker)"
+      (every? true? (map = (zipmap
+                            [{:x -1 :y 0}
+                             {:x 0 :y 0}
+                             {:x 1 :y 0}]
+                            (step [{:x 0 :y -1}
+                                   {:x 0 :y 0}
+                                   {:x 0 :y 1}])))))))
